@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "flashback-essentials-compatibility",
+	"version": "${version}",
+	"name": "Flashback Essentials Compatibility",
+	"description": "Records Essential cosmetics into Flashback replays, adding full compatibility and extra features!",
+	"authors": [
+		"BouncingElf10"
+	],
+	"contact": {
+		"sources": "https://github.com/BouncingElf10/flashback-essentials-compatibility",
+        "issues": "https://github.com/BouncingElf10/flashback-essentials-compatibility/issues"
+	},
+	"license": "GPL-3.0",
+	"icon": "assets/flashback-essentials-compatibility/icon.png",
+	"environment": "client",
+	"entrypoints": {
+        "client": [
+            "com.boundingelf10.fec.FlashbackEssentialsCompatibilityClient"
+        ]
+	},
+	"mixins": [
+		"flashback-essentials-compatibility.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*",
+		"flashback": ">=0.42.1",
+		"essential-loader": "*"
+	}
+}
