@@ -1,0 +1,27 @@
+{
+	"required": true,
+	"package": "com.boundingelf10.fec.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"MixinConnection",
+		"MixinEditorState",
+		"MixinEditorStateEssential",
+		"MixinFlashbackGson",
+		"MixinFlashbackMeta",
+		"MixinGameRenderer",
+		"MixinKeyframeTypeAdapter",
+		"MixinMainMenuBar",
+		"MixinRecorder",
+		"MixinReplaySummary",
+		"MixinReplayUI",
+		"MixinWindowType",
+		"RecorderAccessor",
+		"MixinSelectedEntityPopup"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
