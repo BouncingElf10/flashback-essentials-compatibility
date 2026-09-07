@@ -236,7 +236,7 @@ public final class EmoteTimeline {
 		for (String key : state.hidden()) {
 			try {
 				wanted.put(UUID.fromString(key), new Forced(null, (int) tick, null, null, 0.0F));
-			} catch (IllegalArgumentException _) {
+			} catch (IllegalArgumentException ignored) {
 
 			}
 		}

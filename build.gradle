@@ -1,7 +1,7 @@
 import net.fabricmc.loom.task.prod.ClientProductionRunTask
 
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -46,30 +46,30 @@ loom {
 	}
 }
 
-def extractEssentialImpl = tasks.register("extractEssentialImpl", Sync) {
-	from({ zipTree(configurations.essentialContainer.singleFile) }) {
+// Loom resolves modCompileOnly at configuration time, so the impl jars must exist without a task
+// having run first; zipTree unpacks on demand instead of via a Sync task.
+def essentialImpl = files({
+	zipTree(configurations.essentialContainer.singleFile).matching {
 		include "essential-*.jar"
 		exclude "essential-loader*.jar"
 	}
-	into layout.buildDirectory.dir("essential-impl")
-}
-
-def essentialImpl = files({ fileTree(layout.buildDirectory.dir("essential-impl")) { include "*.jar" } })
-essentialImpl.builtBy(extractEssentialImpl)
+})
 
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	implementation "maven.modrinth:flashback:${project.flashback_version}"
-	compileOnly "gg.essential:essential-${project.minecraft_version}-fabric:${project.essential_version}"
+	modImplementation "maven.modrinth:flashback:${project.flashback_version}"
+
+	// gg.essential:essential-<mc>-fabric is unused: its classes duplicate the impl jar below, which trips tiny-remapper
 
 	essentialContainer "maven.modrinth:essential:${project.essential_modrinth_version}"
-	compileOnly essentialImpl
+	modCompileOnly essentialImpl
 
 	compileOnly "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
 
@@ -103,7 +103,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
+	it.options.release = 21
 }
 
 java {
@@ -112,8 +112,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
