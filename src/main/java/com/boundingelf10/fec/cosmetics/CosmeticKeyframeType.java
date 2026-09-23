@@ -2,7 +2,7 @@ package com.boundingelf10.fec.cosmetics;
 
 import com.boundingelf10.fec.emotes.EmoteKeyframe;
 import com.boundingelf10.fec.ui.CosmeticKeyframeUi;
-import com.moulberry.flashback.editor.ui.ReplayUI;
+import com.boundingelf10.fec.ui.Layout;
 import com.moulberry.flashback.keyframe.KeyframeType;
 import com.moulberry.flashback.keyframe.change.KeyframeChange;
 
@@ -96,7 +96,7 @@ public class CosmeticKeyframeType implements KeyframeType<CosmeticKeyframe> {
 				ImGui.beginDisabled();
 			}
 
-			boolean add = ImGui.button("Add##fecCosmeticAdd") || ReplayUI.consumeConfirm();
+			boolean add = ImGui.button("Add##fecCosmeticAdd") || Layout.consumeConfirm();
 
 			if (!ready) {
 				ImGui.endDisabled();
@@ -104,7 +104,7 @@ public class CosmeticKeyframeType implements KeyframeType<CosmeticKeyframe> {
 
 			ImGui.sameLine();
 
-			if (ImGui.button("Cancel##fecCosmeticCancel") || ReplayUI.consumeCancel()) {
+			if (ImGui.button("Cancel##fecCosmeticCancel") || Layout.consumeCancel()) {
 				ImGui.closeCurrentPopup();
 				return null;
 			}

@@ -1,9 +1,13 @@
 package com.boundingelf10.fec.ui;
 
 import com.moulberry.flashback.editor.ui.ImGuiHelper;
+import com.moulberry.flashback.editor.ui.ReplayUI;
 
 import imgui.moulberry90.ImGui;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.List;
 
 public final class Layout {
@@ -13,7 +17,37 @@ public final class Layout {
 
     private static float wrapEdge = 0.0F;
 
+	private static final MethodHandle CONSUME_CONFIRM = replayUiFlag("consumeConfirm");
+	private static final MethodHandle CONSUME_CANCEL = replayUiFlag("consumeCancel", "consumeNavClose");
+
 	private Layout() { }
+
+	public static boolean consumeConfirm() {
+		return invokeFlag(CONSUME_CONFIRM);
+	}
+
+	public static boolean consumeCancel() {
+		return invokeFlag(CONSUME_CANCEL);
+	}
+
+	private static MethodHandle replayUiFlag(String... names) {
+		for (String name : names) {
+			try {
+				return MethodHandles.publicLookup().findStatic(ReplayUI.class, name, MethodType.methodType(boolean.class));
+			} catch (ReflectiveOperationException ignored) {
+			}
+		}
+
+		return null;
+	}
+
+	private static boolean invokeFlag(MethodHandle handle) {
+		try {
+			return handle != null && (boolean) handle.invokeExact();
+		} catch (Throwable t) {
+			return false;
+		}
+	}
 
 	public static float labelColumn(String... labels) {
 		return labelColumn(List.of(labels));

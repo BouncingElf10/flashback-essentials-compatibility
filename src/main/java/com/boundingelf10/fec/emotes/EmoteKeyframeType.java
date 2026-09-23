@@ -1,6 +1,6 @@
 package com.boundingelf10.fec.emotes;
 
-import com.moulberry.flashback.editor.ui.ReplayUI;
+import com.boundingelf10.fec.ui.Layout;
 import com.moulberry.flashback.keyframe.KeyframeType;
 import com.moulberry.flashback.keyframe.change.KeyframeChange;
 
@@ -105,7 +105,7 @@ public class EmoteKeyframeType implements KeyframeType<EmoteKeyframe> {
 				ImGui.beginDisabled();
 			}
 
-			boolean add = ImGui.button("Add##fecEmoteAdd") || ReplayUI.consumeConfirm();
+			boolean add = ImGui.button("Add##fecEmoteAdd") || Layout.consumeConfirm();
 
 			if (!ready) {
 				ImGui.endDisabled();
@@ -113,7 +113,7 @@ public class EmoteKeyframeType implements KeyframeType<EmoteKeyframe> {
 
 			ImGui.sameLine();
 
-			if (ImGui.button("Cancel##fecEmoteCancel") || ReplayUI.consumeCancel()) {
+			if (ImGui.button("Cancel##fecEmoteCancel") || Layout.consumeCancel()) {
 				ImGui.closeCurrentPopup();
 				return null;
 			}
