@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
-	@Inject(method = "extract", at = @At("HEAD"))
+	@Inject(method = "render(Lnet/minecraft/client/DeltaTracker;Z)V", at = @At("HEAD"))
 	private void fec$holdEssentialEmotes(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
 		EmoteTimeline.hold(deltaTracker);
 	}
