@@ -3,6 +3,9 @@ package com.boundingelf10.fec.ui;
 import com.boundingelf10.fec.emotes.EmoteKeyframe;
 import com.moulberry.flashback.editor.ui.ImGuiHelper;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -17,9 +20,14 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 
+import com.mojang.authlib.GameProfile;
+
 public final class PlayerChoice {
 
 	private static final int[] SCRATCH = new int[1];
+
+	// GameProfile became a record in 1.21.9 (getName() -> name())
+	private static final MethodHandle PROFILE_NAME = profileAccessor("name", "getName");
 
 	private PlayerChoice() { }
 
@@ -52,9 +60,7 @@ public final class PlayerChoice {
 		ClientPacketListener connection = minecraft.getConnection();
 
 		if (connection != null) {
-			for (PlayerInfo info : connection.getOnlinePlayers()) {
-				present.add(info.getProfile().id());
-			}
+			present.addAll(connection.getOnlinePlayerIds());
 		}
 
 		ClientLevel level = minecraft.level;
@@ -88,11 +94,32 @@ public final class PlayerChoice {
 		if (connection != null) {
 			PlayerInfo info = connection.getPlayerInfo(uuid);
 
-			if (info != null && info.getProfile().name() != null) {
-				return info.getProfile().name();
+			String name = info == null ? null : profileName(info);
+
+			if (name != null) {
+				return name;
 			}
 		}
 
 		return uuid.toString().substring(0, 8);
+	}
+
+	private static String profileName(PlayerInfo info) {
+		try {
+			return PROFILE_NAME == null ? null : (String) PROFILE_NAME.invokeExact(info.getProfile());
+		} catch (Throwable t) {
+			return null;
+		}
+	}
+
+	private static MethodHandle profileAccessor(String... names) {
+		for (String name : names) {
+			try {
+				return MethodHandles.publicLookup().findVirtual(GameProfile.class, name, MethodType.methodType(String.class));
+			} catch (ReflectiveOperationException ignored) {
+			}
+		}
+
+		return null;
 	}
 }
