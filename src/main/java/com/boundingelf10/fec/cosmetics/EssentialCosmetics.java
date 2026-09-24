@@ -68,9 +68,7 @@ public final class EssentialCosmetics {
 	public static Set<UUID> knownPlayers(ClientPacketListener connection, @Nullable ClientLevel level) {
 		Set<UUID> players = new LinkedHashSet<>();
 
-		for (PlayerInfo info : connection.getOnlinePlayers()) {
-			players.add(info.getProfile().id());
-		}
+		players.addAll(connection.getOnlinePlayerIds());
 
 		if (level != null) {
 			for (Player player : level.players()) {
