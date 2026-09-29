@@ -3,6 +3,7 @@ import net.fabricmc.loom.task.prod.ClientProductionRunTask
 plugins {
 	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
+	id 'me.modmuss50.mod-publish-plugin' version '0.8.1'
 }
 
 repositories {
@@ -91,6 +92,35 @@ tasks.register("runProdClient", ClientProductionRunTask) {
 	classpath.from configurations.devLogin
 	mainClass = "net.covers1624.devlogin.DevLogin"
 	programArgs.addAll("--launch_target", "net.fabricmc.loader.impl.launch.knot.KnotClient")
+}
+
+publishMods {
+	file = tasks.remapJar.archiveFile
+	changelog = "Added compatibility for Flashback 0.39.5+ and support for 1.21–26.3"
+	type = STABLE
+	modLoaders.add("fabric")
+
+	modrinth {
+		projectId = "oX1Md8vI"
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		requires("fabric-api", "flashback", "essential")
+		minecraftVersionRange {
+			start = "1.21"
+			end = "1.21.11"
+		}
+	}
+
+	curseforge {
+		projectId = "1718390"
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		clientRequired = true
+		serverRequired = false
+		requires("fabric-api", "flashback", "essential-mod")
+		minecraftVersionRange {
+			start = "1.21"
+			end = "1.21.11"
+		}
+	}
 }
 
 processResources {
