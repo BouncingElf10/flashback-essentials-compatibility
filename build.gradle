@@ -115,7 +115,7 @@ publishMods {
 		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
 		clientRequired = true
 		serverRequired = false
-		requires("fabric-api", "flashback", "essential-mod")
+		requires("fabric-api", "essential-mod")
 		minecraftVersionRange {
 			start = "26.2"
 			end = "26.3"
